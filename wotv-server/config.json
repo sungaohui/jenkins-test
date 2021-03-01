@@ -1,0 +1,96 @@
+{  
+  "remote_app_root": "/wotv/htdocs/server_root", 
+  "remote_pkg_root": "/wotv/htdocs/pkg",
+  "server_pkg_path": "wars_server/server/lwww/node",
+  "replace_config": [ 
+      { 
+          "src_path": "wars_operation/params/json/*.json",
+          "dst_path": "wars_server/server/lwww/node/app/resources/master/cn_activity/"
+      },
+      {
+          "src_path": "wars_config/Plan/server_master/output/*",
+          "dst_path": "wars_server/server/lwww/node/app/resources/master/"
+      },
+      {
+          "src_path": "wars_config/Plan/server_master/output/MasterParam.txt",
+          "dst_path": "wars_server/server/lwww/node/app/resources/master/MasterParam.json"
+      },
+      {
+          "src_path": "wars_config/Plan/server_master/output/MasterParam.txt",
+          "dst_path": "wars_server/server/lwww/node/manager-frontend/src/Master/MasterParam.json"
+      },
+      {
+          "src_path": "wars_server/server/lwww/node/app/resources/master/coin/*",
+          "dst_path": "wars_server/server/lwww/node/app/gumi_modules/coin/resources/"
+      }
+  ],
+  "wars_server": {
+      "master": ["cn_gapp","cn_dev","cn_img","cn_tin","cn_chk","cn_ios"],
+      "CCB_prod_V0200": ["cn_gapp"]
+  },
+  "wars_operation": {
+      "master": ["cn_gapp","cn_dev","cn_img","cn_tin","cn_chk","cn_ios"],
+      "CCB_prod_V0200": ["cn_gapp"],
+      "release_v0.4.5_20201225": []
+  },
+  "wars_config": {
+      "master": ["cn_gapp","cn_dev","cn_img","cn_tin","cn_chk","cn_ios"],
+      "release_v0.4.5_20201227": ["cn_img","cn_tin"],
+      "FINAL_REVIEW_1.2": ["cn_gapp"]
+  }, 
+  "env_list": {
+    "cn_ios": {
+        "wars_config_auto_deploy": false,
+          "wars_operation_auto_deploy": false,
+          "wars_server_auto_deploy": false,
+          "wars_server": "master",
+          "wars_operation": "master",
+          "wars_config": "master",
+          "target_server": ["120.92.23.226"]
+    },
+      "cn_chk": {
+          "wars_config_auto_deploy": false,
+          "wars_operation_auto_deploy": false,
+          "wars_server_auto_deploy": false,
+          "wars_server": "master",
+          "wars_operation": "master",
+          "wars_config": "master",
+          "target_server": ["120.92.104.147"]
+      },
+      "cn_dev": {
+          "wars_config_auto_deploy": true,
+          "wars_operation_auto_deploy": true,
+          "wars_server_auto_deploy": false,
+          "wars_server": "master",
+          "wars_operation": "master",
+          "wars_config": "master",
+          "target_server": ["120.92.105.136"]
+      },
+      "cn_img": {
+          "wars_config_auto_deploy": false,
+          "wars_operation_auto_deploy": false,
+          "wars_server_auto_deploy": false,
+          "wars_server": "master",
+          "wars_operation": "release_v0.4.5_20201225",
+          "wars_config": "release_v0.4.5_20201227",
+          "target_server": ["120.92.105.106"]
+      },
+      "cn_tin": {
+          "wars_config_auto_deploy": false,
+          "wars_operation_auto_deploy": false,
+          "wars_server_auto_deploy": false,
+          "wars_server": "master",
+          "wars_operation": "release_v0.4.5_20201225",
+          "wars_config": "release_v0.4.5_20201227",
+          "target_server": ["120.92.83.40"]
+      }
+  },
+  "deploy_command": {
+      "server": [ "node server_opt.js -s 1 ",
+          "node server_opt.js -s 4 ",
+          "node server_opt.js -s 3 ",
+          "node server_opt.js -s 2 "],
+      "other": ["node server_opt.js -s 1 ",
+          "node server_opt.js -s 2 "]
+  }
+}
