@@ -2,7 +2,7 @@
 
 
 def readPublishConfig() {
-    def configProps = readJSON file: 'config.json', returnPojo: true
+    def configProps = readJSON file: 'wotv-server/config.json', returnPojo: true
     def envList = configProps.env_list
     def envListChoices = envList.keySet().join('\n')
     def warsConfigBranchChoices = configProps.wars_config.keySet().join('\n')
