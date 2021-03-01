@@ -46,11 +46,6 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
-        stage('Remove Last Build') {
-            steps {
-                sh 'rm -f *.tar.gz *.tar.gz.sum'
-            }
-        }
 
         stage('Deploy') {
             steps {
