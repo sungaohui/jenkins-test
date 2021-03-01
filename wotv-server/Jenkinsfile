@@ -1,0 +1,61 @@
+#!/usr/bin/env groovy
+
+
+def readPublishConfig() {
+    def configProps = readJSON file: 'config.json', returnPojo: true
+    def envList = configProps.env_list
+    def envListChoices = envList.keySet().join('\n')
+    def warsConfigBranchChoices = configProps.wars_config.keySet().join('\n')
+    def warsOperationBranchChoices = configProps.wars_operation.keySet().join('\n')
+    def warsServerBranchChoices = configProps.wars_server.keySet().join('\n')
+    def inputs = input message: '请确认', parameters: [
+        choice(name: 'DEPLOY_ENV', choices: envListChoices, description: ''),
+        choice(name: 'WARS_CONFIG_BRANCH', choices: warsConfigBranchChoices, description: ''),
+        choice(name: 'WARS_OPERATION_BRANCH', choices: warsOperationBranchChoices, description: ''),
+        choice(name: 'WARS_SERVER_BRANCH', choices: warsServerBranchChoices, description: '')
+    ], ok: '确认'
+    DEPLOY_ENV = inputs.DEPLOY_ENV
+    WARS_CONFIG_BRANCH = inputs.WARS_CONFIG_BRANCH
+    WARS_OPERATION_BRANCH = inputs.WARS_OPERATION_BRANCH
+    WARS_SERVER_BRANCH = inputs.WARS_SERVER_BRANCH
+    echo WARS_CONFIG_BRANCH
+    def replaceConfigs = configProps.replace_config
+    def remotePkgRoot = configProps.remote_pkg_root
+    def remoteAppRoot = configProps.remote_app_root
+    def serverPkgPath = configProps.server_pkg_path
+    def deployCommandRaw = configProps.deploy_command
+    try {
+        deployWithEnv(DEPLOY_ENV, envList, replaceConfigs, remotePkgRoot, remoteAppRoot, serverPkgPath, deployCommandRaw)
+    }
+    catch (ex) {
+        error "Get Repo info failed - ${ex.message}"
+    }
+}
+
+pipeline {
+    agent {
+        label 'os:linux'
+    }
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(
+            daysToKeepStr: '15',
+            artifactNumToKeepStr: '20'
+        ))
+        ansiColor('xterm')
+    }
+    stages {
+        stage('Remove Last Build') {
+            steps {
+                sh 'rm -f *.tar.gz *.tar.gz.sum'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                readPublishConfig()
+            }
+        }
+    }
+}
